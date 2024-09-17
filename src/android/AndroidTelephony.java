@@ -73,14 +73,14 @@ public class AndroidTelephony extends CordovaPlugin {
 
       if (telephonyManager == null) {
         result.put("error", "TelephonyManager not available");
-        return "{}";
+        return result;
       }
 
       List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
       if (cellInfoList == null || cellInfoList.isEmpty()) {
         result.put("cellInfoList", new JSONArray());
-        return "{}";
+        return result;
       }
 
       JSONArray cellInfoJsonArray = new JSONArray();
