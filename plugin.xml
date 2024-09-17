@@ -8,21 +8,23 @@
     <author>Ben Letchford</author>
     <license>MIT</license>
 
+    <js-module src="www/androidtelephony.js" name="androidtelephony">
+      <runs/>
+      <clobbers target="AndroidTelephony" />
+    </js-module>
+
     <platform name="android">
-      <js-module src="www/plugin.js" name="plugin">
-        <runs/>
-        <clobbers target="AndroidTelephony" />
-      </js-module>
-      <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="AndroidTelephony">
-          <param name="android-package" value="com.zetifi.androidtelephony" />
-          <param name="onload" value="true" />
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="AndroidTelephony" >
+                <param name="android-package" value="com.zetifi.androidtelephony.AndroidTelephony"/>
+            </feature>
+        </config-file>
 
-          <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-          <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-        </feature>
-      </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        </config-file>
 
-      <source-file src="src/android/Telephony.java" target-dir="src/com/example/" />
+        <source-file src="src/android/AndroidTelephony.java" target-dir="src/com/zetifi/androidtelephony" />
     </platform>
 </plugin>

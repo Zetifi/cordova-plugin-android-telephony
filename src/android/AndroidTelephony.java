@@ -43,7 +43,7 @@ import android.telephony.TelephonyManager;
 import android.telephony.ServiceState;
 import android.util.Log;
 
-public class Telephony extends CordovaPlugin {
+public class AndroidTelephony extends CordovaPlugin {
 
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
@@ -52,10 +52,10 @@ public class Telephony extends CordovaPlugin {
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
     if ("getCarrierInfo".equals(action)) {
-      return getCarrierInfo(args, callbackContext);
+      return this.getCarrierInfo(args, callbackContext);
     } else if ("getAllCellInfo".equals(action)) {
       JSONObject s = new JSONObject();
-      s.put("allCellInfo", getAllCellInfo());
+      s.put("allCellInfo", this.getAllCellInfo());
 
       callbackContext.success(s);
       return true;
