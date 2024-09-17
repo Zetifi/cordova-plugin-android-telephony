@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-plugin-android-telephony"
+    version="0.0.1">
+    <name>Cordova Plugin Android Telephony</name>
+    <description>Cordova Android Telephony Plugin</description>
+    <author>Ben Letchford</author>
+    <license>MIT</license>
+
+    <platform name="android">
+      <js-module src="www/plugin.js" name="plugin">
+        <runs/>
+        <clobbers target="AndroidTelephony" />
+      </js-module>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="AndroidTelephony">
+          <param name="android-package" value="com.zetifi.androidtelephony" />
+          <param name="onload" value="true" />
+
+          <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+          <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        </feature>
+      </config-file>
+
+      <source-file src="src/android/Telephony.java" target-dir="src/com/example/" />
+    </platform>
+</plugin>

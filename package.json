@@ -1,0 +1,11 @@
+{
+  "name": "cordova-plugin-android-telephony",
+  "version": "0.0.1",
+  "cordova": {
+    "id": "cordova-plugin-android-telephony",
+    "platforms": [
+      "android"
+    ]
+  },
+  "description": "Cordova Android Telephony Plugin"
+}
