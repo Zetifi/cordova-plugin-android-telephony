@@ -64,7 +64,7 @@ public class AndroidTelephony extends CordovaPlugin {
     }
   }
 
-  public String getAllCellInfo() {
+  public JSONObject getAllCellInfo() {
     JSONObject result = new JSONObject();
 
     try {
@@ -169,7 +169,7 @@ public class AndroidTelephony extends CordovaPlugin {
       }
     }
 
-    return result.toString();
+    return result;
   }
 
   private boolean getCarrierInfo(JSONArray args, CallbackContext callbackContext) throws JSONException {
