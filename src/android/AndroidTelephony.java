@@ -72,14 +72,14 @@ public class AndroidTelephony extends CordovaPlugin {
           .getSystemService(Context.TELEPHONY_SERVICE);
 
       if (telephonyManager == null) {
-        result.put("error", "TelephonyManager not available");
+        result.put("ERROR", "TelephonyManager not available");
         return result;
       }
 
       List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
       if (cellInfoList == null || cellInfoList.isEmpty()) {
-        result.put("cellInfoList", new JSONArray());
+        result.put("CELL_INFO_LIST", new JSONArray());
         return result;
       }
 
@@ -88,8 +88,8 @@ public class AndroidTelephony extends CordovaPlugin {
       for (CellInfo cellInfo : cellInfoList) {
         JSONObject cellInfoJson = new JSONObject();
 
-        cellInfoJson.put("registered", cellInfo.isRegistered());
-        cellInfoJson.put("timestamp", cellInfo.getTimeStamp());
+        cellInfoJson.put("REGISTERED", cellInfo.isRegistered());
+        cellInfoJson.put("TIMESTAMP", cellInfo.getTimeStamp());
 
         if (cellInfo instanceof CellInfoGsm) {
           CellInfoGsm cellInfoGsm = (CellInfoGsm) cellInfo;
@@ -97,9 +97,9 @@ public class AndroidTelephony extends CordovaPlugin {
           CellIdentityGsm cellIdentityGsm = cellInfoGsm.getCellIdentity();
           CellSignalStrengthGsm cellSignalStrengthGsm = cellInfoGsm.getCellSignalStrength();
 
-          cellInfoJson.put("type", "GSM");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityGsm));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthGsm));
+          cellInfoJson.put("TYPE", "GSM");
+          cellIdentityToJson(cellIdentityGsm, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthGsm, cellInfoJson);
 
         } else if (cellInfo instanceof CellInfoLte) {
           CellInfoLte cellInfoLte = (CellInfoLte) cellInfo;
@@ -107,9 +107,9 @@ public class AndroidTelephony extends CordovaPlugin {
           CellIdentityLte cellIdentityLte = cellInfoLte.getCellIdentity();
           CellSignalStrengthLte cellSignalStrengthLte = cellInfoLte.getCellSignalStrength();
 
-          cellInfoJson.put("type", "LTE");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityLte));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthLte));
+          cellInfoJson.put("TYPE", "LTE");
+          cellIdentityToJson(cellIdentityLte, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthLte, cellInfoJson);
 
         } else if (cellInfo instanceof CellInfoWcdma) {
           CellInfoWcdma cellInfoWcdma = (CellInfoWcdma) cellInfo;
@@ -117,9 +117,9 @@ public class AndroidTelephony extends CordovaPlugin {
           CellIdentityWcdma cellIdentityWcdma = cellInfoWcdma.getCellIdentity();
           CellSignalStrengthWcdma cellSignalStrengthWcdma = cellInfoWcdma.getCellSignalStrength();
 
-          cellInfoJson.put("type", "WCDMA");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityWcdma));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthWcdma));
+          cellInfoJson.put("TYPE", "WCDMA");
+          cellIdentityToJson(cellIdentityWcdma, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthWcdma, cellInfoJson);
 
         } else if (cellInfo instanceof CellInfoCdma) {
           CellInfoCdma cellInfoCdma = (CellInfoCdma) cellInfo;
@@ -127,9 +127,9 @@ public class AndroidTelephony extends CordovaPlugin {
           CellIdentityCdma cellIdentityCdma = cellInfoCdma.getCellIdentity();
           CellSignalStrengthCdma cellSignalStrengthCdma = cellInfoCdma.getCellSignalStrength();
 
-          cellInfoJson.put("type", "CDMA");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityCdma));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthCdma));
+          cellInfoJson.put("TYPE", "CDMA");
+          cellIdentityToJson(cellIdentityCdma, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthCdma, cellInfoJson);
 
         } else if (cellInfo instanceof CellInfoNr) {
           CellInfoNr cellInfoNr = (CellInfoNr) cellInfo;
@@ -138,9 +138,9 @@ public class AndroidTelephony extends CordovaPlugin {
           CellSignalStrengthNr cellSignalStrengthNr = (CellSignalStrengthNr) cellInfoNr
               .getCellSignalStrength();
 
-          cellInfoJson.put("type", "NR");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityNr));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthNr));
+          cellInfoJson.put("TYPE", "NR");
+          cellIdentityToJson(cellIdentityNr, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthNr, cellInfoJson);
 
         } else if (cellInfo instanceof CellInfoTdscdma) {
           CellInfoTdscdma cellInfoTdscdma = (CellInfoTdscdma) cellInfo;
@@ -148,18 +148,18 @@ public class AndroidTelephony extends CordovaPlugin {
           CellIdentityTdscdma cellIdentityTdscdma = cellInfoTdscdma.getCellIdentity();
           CellSignalStrengthTdscdma cellSignalStrengthTdscdma = cellInfoTdscdma.getCellSignalStrength();
 
-          cellInfoJson.put("type", "TDSCDMA");
-          cellInfoJson.put("cellIdentity", cellIdentityToJson(cellIdentityTdscdma));
-          cellInfoJson.put("cellSignalStrength", cellSignalStrengthToJson(cellSignalStrengthTdscdma));
+          cellInfoJson.put("TYPE", "TDSCDMA");
+          cellIdentityToJson(cellIdentityTdscdma, cellInfoJson);
+          cellSignalStrengthToJson(cellSignalStrengthTdscdma, cellInfoJson);
 
         } else {
-          cellInfoJson.put("type", "Unknown");
+          cellInfoJson.put("TYPE", "Unknown");
         }
 
         cellInfoJsonArray.put(cellInfoJson);
       }
 
-      result.put("cellInfoList", cellInfoJsonArray);
+      result.put("CELL_INFO_LIST", cellInfoJsonArray);
 
     } catch (Exception e) {
       try {
@@ -183,141 +183,130 @@ public class AndroidTelephony extends CordovaPlugin {
     return true;
   }
 
-  private static JSONObject cellIdentityToJson(CellIdentity cellIdentity) throws JSONException {
-    JSONObject json = new JSONObject();
-
+  private static void cellIdentityToJson(CellIdentity cellIdentity, JSONObject cellinfo) throws JSONException {
     if (cellIdentity instanceof CellIdentityGsm) {
       CellIdentityGsm cellIdentityGsm = (CellIdentityGsm) cellIdentity;
-      json.put("mcc", cellIdentityGsm.getMccString());
-      json.put("mnc", cellIdentityGsm.getMncString());
-      json.put("lac", cellIdentityGsm.getLac());
-      json.put("cid", cellIdentityGsm.getCid());
-      json.put("arfcn", cellIdentityGsm.getArfcn());
-      json.put("bsic", cellIdentityGsm.getBsic());
-      json.put("operatorAlphaLong", cellIdentityGsm.getOperatorAlphaLong());
-      json.put("operatorAlphaShort", cellIdentityGsm.getOperatorAlphaShort());
+      cellinfo.put("CELL_IDENTITY_MCC", cellIdentityGsm.getMccString());
+      cellinfo.put("CELL_IDENTITY_MNC", cellIdentityGsm.getMncString());
+      cellinfo.put("CELL_IDENTITY_LAC", cellIdentityGsm.getLac());
+      cellinfo.put("CELL_IDENTITY_CID", cellIdentityGsm.getCid());
+      cellinfo.put("CELL_IDENTITY_ARFCN", cellIdentityGsm.getArfcn());
+      cellinfo.put("CELL_IDENTITY_BSIC", cellIdentityGsm.getBsic());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_LONG", cellIdentityGsm.getOperatorAlphaLong());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_SHORT", cellIdentityGsm.getOperatorAlphaShort());
 
     } else if (cellIdentity instanceof CellIdentityLte) {
       CellIdentityLte cellIdentityLte = (CellIdentityLte) cellIdentity;
-      json.put("mcc", cellIdentityLte.getMccString());
-      json.put("mnc", cellIdentityLte.getMncString());
-      json.put("ci", cellIdentityLte.getCi());
-      json.put("pci", cellIdentityLte.getPci());
-      json.put("tac", cellIdentityLte.getTac());
-      json.put("earfcn", cellIdentityLte.getEarfcn());
-      json.put("bandwidth", cellIdentityLte.getBandwidth());
-      json.put("operatorAlphaLong", cellIdentityLte.getOperatorAlphaLong());
-      json.put("operatorAlphaShort", cellIdentityLte.getOperatorAlphaShort());
-
+      cellinfo.put("CELL_IDENTITY_MCC", cellIdentityLte.getMccString());
+      cellinfo.put("CELL_IDENTITY_MNC", cellIdentityLte.getMncString());
+      cellinfo.put("CELL_IDENTITY_CI", cellIdentityLte.getCi());
+      cellinfo.put("CELL_IDENTITY_PCI", cellIdentityLte.getPci());
+      cellinfo.put("CELL_IDENTITY_TAC", cellIdentityLte.getTac());
+      cellinfo.put("CELL_IDENTITY_EARFCN", cellIdentityLte.getEarfcn());
+      cellinfo.put("CELL_IDENTITY_BANDWIDTH", cellIdentityLte.getBandwidth());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_LONG", cellIdentityLte.getOperatorAlphaLong());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_SHORT", cellIdentityLte.getOperatorAlphaShort());
     } else if (cellIdentity instanceof CellIdentityWcdma) {
       CellIdentityWcdma cellIdentityWcdma = (CellIdentityWcdma) cellIdentity;
-      json.put("mcc", cellIdentityWcdma.getMccString());
-      json.put("mnc", cellIdentityWcdma.getMncString());
-      json.put("lac", cellIdentityWcdma.getLac());
-      json.put("cid", cellIdentityWcdma.getCid());
-      json.put("psc", cellIdentityWcdma.getPsc());
-      json.put("uarfcn", cellIdentityWcdma.getUarfcn());
-      json.put("operatorAlphaLong", cellIdentityWcdma.getOperatorAlphaLong());
-      json.put("operatorAlphaShort", cellIdentityWcdma.getOperatorAlphaShort());
-
+      cellinfo.put("CELL_IDENTITY_MCC", cellIdentityWcdma.getMccString());
+      cellinfo.put("CELL_IDENTITY_MNC", cellIdentityWcdma.getMncString());
+      cellinfo.put("CELL_IDENTITY_LAC", cellIdentityWcdma.getLac());
+      cellinfo.put("CELL_IDENTITY_CID", cellIdentityWcdma.getCid());
+      cellinfo.put("CELL_IDENTITY_PSC", cellIdentityWcdma.getPsc());
+      cellinfo.put("CELL_IDENTITY_UARFCN", cellIdentityWcdma.getUarfcn());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_LONG", cellIdentityWcdma.getOperatorAlphaLong());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_SHORT", cellIdentityWcdma.getOperatorAlphaShort());
     } else if (cellIdentity instanceof CellIdentityCdma) {
       CellIdentityCdma cellIdentityCdma = (CellIdentityCdma) cellIdentity;
-      json.put("networkId", cellIdentityCdma.getNetworkId());
-      json.put("systemId", cellIdentityCdma.getSystemId());
-      json.put("basestationId", cellIdentityCdma.getBasestationId());
-      json.put("latitude", cellIdentityCdma.getLatitude());
-      json.put("longitude", cellIdentityCdma.getLongitude());
-
+      cellinfo.put("CELL_IDENTITY_NETWORK_ID", cellIdentityCdma.getNetworkId());
+      cellinfo.put("CELL_IDENTITY_SYSTEM_ID", cellIdentityCdma.getSystemId());
+      cellinfo.put("CELL_IDENTITY_BASE_STATION_ID", cellIdentityCdma.getBasestationId());
+      cellinfo.put("CELL_IDENTITY_LONGITUDE", cellIdentityCdma.getLongitude());
+      cellinfo.put("CELL_IDENTITY_LATITUDE", cellIdentityCdma.getLatitude());
     } else if (cellIdentity instanceof CellIdentityNr) {
       CellIdentityNr cellIdentityNr = (CellIdentityNr) cellIdentity;
-      json.put("mcc", cellIdentityNr.getMccString());
-      json.put("mnc", cellIdentityNr.getMncString());
-      json.put("nci", cellIdentityNr.getNci());
-      json.put("pci", cellIdentityNr.getPci());
-      json.put("tac", cellIdentityNr.getTac());
-      json.put("nrarfcn", cellIdentityNr.getNrarfcn());
-      json.put("bands", cellIdentityNr.getBands().toString());
-      json.put("operatorAlphaLong", cellIdentityNr.getOperatorAlphaLong());
-      json.put("operatorAlphaShort", cellIdentityNr.getOperatorAlphaShort());
-
+      cellinfo.put("CELL_IDENTITY_MCC", cellIdentityNr.getMccString());
+      cellinfo.put("CELL_IDENTITY_MNC", cellIdentityNr.getMncString());
+      cellinfo.put("CELL_IDENTITY_NCI", cellIdentityNr.getNci());
+      cellinfo.put("CELL_IDENTITY_PCI", cellIdentityNr.getPci());
+      cellinfo.put("CELL_IDENTITY_TAC", cellIdentityNr.getTac());
+      cellinfo.put("CELL_IDENTITY_NRARFCN", cellIdentityNr.getNrarfcn());
+      cellinfo.put("CELL_IDENTITY_BANDS", cellIdentityNr.getBands().toString());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_LONG", cellIdentityNr.getOperatorAlphaLong());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_SHORT", cellIdentityNr.getOperatorAlphaShort());
     } else if (cellIdentity instanceof CellIdentityTdscdma) {
       CellIdentityTdscdma cellIdentityTdscdma = (CellIdentityTdscdma) cellIdentity;
-      json.put("mcc", cellIdentityTdscdma.getMccString());
-      json.put("mnc", cellIdentityTdscdma.getMncString());
-      json.put("lac", cellIdentityTdscdma.getLac());
-      json.put("cid", cellIdentityTdscdma.getCid());
-      json.put("cpid", cellIdentityTdscdma.getCpid());
-      json.put("uarfcn", cellIdentityTdscdma.getUarfcn());
-      json.put("operatorAlphaLong", cellIdentityTdscdma.getOperatorAlphaLong());
-      json.put("operatorAlphaShort", cellIdentityTdscdma.getOperatorAlphaShort());
+      cellinfo.put("CELL_IDENTITY_MCC", cellIdentityTdscdma.getMccString());
+      cellinfo.put("CELL_IDENTITY_MNC", cellIdentityTdscdma.getMncString());
+      cellinfo.put("CELL_IDENTITY_LAC", cellIdentityTdscdma.getLac());
+      cellinfo.put("CELL_IDENTITY_CID", cellIdentityTdscdma.getCid());
+      cellinfo.put("CELL_IDENTITY_CPID", cellIdentityTdscdma.getCpid());
+      cellinfo.put("CELL_IDENTITY_UARFCN", cellIdentityTdscdma.getUarfcn());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_LONG", cellIdentityTdscdma.getOperatorAlphaLong());
+      cellinfo.put("CELL_IDENTITY_OPERATOR_ALPHA_SHORT", cellIdentityTdscdma.getOperatorAlphaShort());
 
     } else {
-      json.put("error", "Unknown CellIdentity type");
+      cellinfo.put("CELL_IDENTITY_ERROR", "Unknown CellIdentity type");
     }
-
-    return json;
   }
 
-  private static JSONObject cellSignalStrengthToJson(CellSignalStrength signalStrength) throws JSONException {
-    JSONObject json = new JSONObject();
+  private static void cellSignalStrengthToJson(CellSignalStrength signalStrength, JSONObject cellinfo)
+      throws JSONException {
 
     if (signalStrength instanceof CellSignalStrengthGsm) {
       CellSignalStrengthGsm signalStrengthGsm = (CellSignalStrengthGsm) signalStrength;
-      json.put("dbm", signalStrengthGsm.getDbm());
-      json.put("level", signalStrengthGsm.getLevel());
-      json.put("asuLevel", signalStrengthGsm.getAsuLevel());
-      json.put("timingAdvance", signalStrengthGsm.getTimingAdvance());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthGsm.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthGsm.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ASU_LEVEL", signalStrengthGsm.getAsuLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_TIMING_ADVANCE", signalStrengthGsm.getTimingAdvance());
 
     } else if (signalStrength instanceof CellSignalStrengthLte) {
       CellSignalStrengthLte signalStrengthLte = (CellSignalStrengthLte) signalStrength;
-      json.put("dbm", signalStrengthLte.getDbm());
-      json.put("level", signalStrengthLte.getLevel());
-      json.put("asuLevel", signalStrengthLte.getAsuLevel());
-      json.put("rsrp", signalStrengthLte.getRsrp());
-      json.put("rsrq", signalStrengthLte.getRsrq());
-      json.put("rssnr", signalStrengthLte.getRssnr());
-      json.put("cqi", signalStrengthLte.getCqi());
-      json.put("timingAdvance", signalStrengthLte.getTimingAdvance());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthLte.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthLte.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ASU_LEVEL", signalStrengthLte.getAsuLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_RSRP", signalStrengthLte.getRsrp());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_RSRQ", signalStrengthLte.getRsrq());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_RSSNR", signalStrengthLte.getRssnr());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CQI", signalStrengthLte.getCqi());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_TIMING_ADVANCE", signalStrengthLte.getTimingAdvance());
 
     } else if (signalStrength instanceof CellSignalStrengthWcdma) {
       CellSignalStrengthWcdma signalStrengthWcdma = (CellSignalStrengthWcdma) signalStrength;
-      json.put("dbm", signalStrengthWcdma.getDbm());
-      json.put("level", signalStrengthWcdma.getLevel());
-      json.put("asuLevel", signalStrengthWcdma.getAsuLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthWcdma.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthWcdma.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ASU_LEVEL", signalStrengthWcdma.getAsuLevel());
 
     } else if (signalStrength instanceof CellSignalStrengthCdma) {
       CellSignalStrengthCdma signalStrengthCdma = (CellSignalStrengthCdma) signalStrength;
-      json.put("dbm", signalStrengthCdma.getDbm());
-      json.put("level", signalStrengthCdma.getLevel());
-      json.put("asuLevel", signalStrengthCdma.getAsuLevel());
-      json.put("cdmaDbm", signalStrengthCdma.getCdmaDbm());
-      json.put("cdmaEcio", signalStrengthCdma.getCdmaEcio());
-      json.put("evdoDbm", signalStrengthCdma.getEvdoDbm());
-      json.put("evdoEcio", signalStrengthCdma.getEvdoEcio());
-      json.put("evdoSnr", signalStrengthCdma.getEvdoSnr());
-
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthCdma.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthCdma.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ASU_LEVEL", signalStrengthCdma.getAsuLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CDMA_DBM", signalStrengthCdma.getCdmaDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CDMA_ECIO", signalStrengthCdma.getCdmaEcio());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_EVDO_DBM", signalStrengthCdma.getEvdoDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_EVDO_ECIO", signalStrengthCdma.getEvdoEcio());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_EVDO_SNR", signalStrengthCdma.getEvdoSnr());
     } else if (signalStrength instanceof CellSignalStrengthNr) {
       CellSignalStrengthNr signalStrengthNr = (CellSignalStrengthNr) signalStrength;
-      json.put("dbm", signalStrengthNr.getDbm());
-      json.put("level", signalStrengthNr.getLevel());
-      json.put("ssRsrp", signalStrengthNr.getSsRsrp());
-      json.put("ssRsrq", signalStrengthNr.getSsRsrq());
-      json.put("ssSinr", signalStrengthNr.getSsSinr());
-      json.put("csiRsrp", signalStrengthNr.getCsiRsrp());
-      json.put("csiRsrq", signalStrengthNr.getCsiRsrq());
-      json.put("csiSinr", signalStrengthNr.getCsiSinr());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthNr.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthNr.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_SS_RSRP", signalStrengthNr.getSsRsrp());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_SS_RSRQ", signalStrengthNr.getSsRsrq());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_SS_SINR", signalStrengthNr.getSsSinr());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CSI_RSRP", signalStrengthNr.getCsiRsrp());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CSI_RSRQ", signalStrengthNr.getCsiRsrq());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_CSI_SINR", signalStrengthNr.getCsiSinr());
 
     } else if (signalStrength instanceof CellSignalStrengthTdscdma) {
       CellSignalStrengthTdscdma signalStrengthTdscdma = (CellSignalStrengthTdscdma) signalStrength;
-      json.put("dbm", signalStrengthTdscdma.getDbm());
-      json.put("level", signalStrengthTdscdma.getLevel());
-      json.put("asuLevel", signalStrengthTdscdma.getAsuLevel());
-      json.put("rscp", signalStrengthTdscdma.getRscp());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_DBM", signalStrengthTdscdma.getDbm());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_LEVEL", signalStrengthTdscdma.getLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ASU_LEVEL", signalStrengthTdscdma.getAsuLevel());
+      cellinfo.put("CELL_SIGNAL_STRENGTH_RSCP", signalStrengthTdscdma.getRscp());
 
     } else {
-      json.put("error", "Unknown CellSignalStrength type");
+      cellinfo.put("CELL_SIGNAL_STRENGTH_ERROR", "Unknown CellSignalStrength type");
     }
-
-    return json;
   }
 }
